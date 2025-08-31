@@ -1,103 +1,169 @@
-import Image from "next/image";
+import Link from 'next/link'
+import Image from 'next/image'
+import { prisma } from '../lib/prisma'
 
-export default function Home() {
+function formatPrice(paise: number | bigint, currency = 'INR') {
+  const rupees = (Number(paise) || 0) / 100
+  return rupees.toLocaleString('en-IN', { style: 'currency', currency })
+}
+
+export const dynamic = 'force-dynamic'
+
+export default async function Home() {
+  // Fetch featured collections and latest products; gracefully handle empty states
+  let collections: Array<{ id: string; slug: string; title: string; description: string | null; heroImage: string | null }> = []
+  let products: Array<{ id: string; slug: string; title: string; currency: string; price: bigint | number; images: Array<{ url: string; alt: string | null }> }> = []
+
+  try {
+    ;[collections, products] = await Promise.all([
+      prisma.collection.findMany({
+        take: 3,
+        orderBy: { title: 'asc' },
+      }),
+      prisma.product.findMany({
+        where: { status: 'PUBLISHED' },
+        orderBy: { createdAt: 'desc' },
+        take: 8,
+        include: { images: { take: 1, orderBy: { order: 'asc' } } },
+      }),
+    ])
+  } catch (err) {
+    console.error('Database not initialized yet or unavailable. Rendering with empty state.', err)
+  }
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <main className="min-h-screen flex flex-col items-stretch text-ink overflow-hidden">
+      {/* Hero */}
+      <section className="relative flex flex-col items-center justify-center text-center px-6 py-24 md:py-32 gap-6">
+        <div className="absolute inset-0 bg-[radial-gradient(60%_60%_at_50%_0%,rgba(198,169,105,0.15),transparent_60%)]" />
+        <h1 className="relative text-6xl md:text-8xl font-serif tracking-wider">AVNERA</h1>
+        <p className="relative text-xl md:text-2xl text-ink/70">Craft Meets Couture</p>
+        <div className="relative flex gap-4 mt-4">
+          <Link href="/shop" className="btn-gold">Shop</Link>
+          <Link href="/collections" className="btn-outline">Explore Collections</Link>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+        <div className="relative mt-2">
+          <Link href="/admin/products" className="text-sm text-ink/50 hover:text-ink/80">Admin</Link>
+        </div>
+      </section>
+
+      {/* Featured Collections */}
+      {collections.length > 0 && (
+        <section className="container py-12 md:py-16">
+          <div className="flex items-end justify-between mb-6">
+            <h2 className="text-2xl md:text-3xl font-serif">Featured Collections</h2>
+            <Link href="/collections" className="text-ink/60 hover:text-ink">View all</Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {collections.map((c) => (
+              <Link key={c.id} href={`/collections/${c.slug}`} className="group rounded-xl overflow-hidden border border-ink/10 bg-white shadow-luxury">
+                <div className="relative aspect-[16/10] bg-[rgba(10,10,10,0.04)] overflow-hidden">
+                  {c.heroImage ? (
+                    <Image src={c.heroImage} alt={c.title} fill className="object-cover group-hover:scale-[1.02] transition-transform duration-300" sizes="(max-width: 768px) 100vw, 33vw" />
+                  ) : (
+                    <div className="w-full h-full grid place-items-center text-ink/40">No image</div>
+                  )}
+                </div>
+                <div className="p-4">
+                  <h3 className="text-lg font-medium">{c.title}</h3>
+                  {c.description && <p className="text-sm text-ink/60 mt-1 line-clamp-2">{c.description}</p>}
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* New Arrivals */}
+      {products.length > 0 && (
+        <section className="container py-12 md:py-16">
+          <div className="flex items-end justify-between mb-6">
+            <h2 className="text-2xl md:text-3xl font-serif">New Arrivals</h2>
+            <Link href="/shop" className="text-ink/60 hover:text-ink">Shop all</Link>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+            {products.map((p) => {
+              const img = p.images?.[0]
+              return (
+                <Link key={p.id} href={`/shop/${p.slug}`} className="group rounded-xl overflow-hidden border border-ink/10 bg-white">
+                  <div className="relative aspect-[4/5] bg-[rgba(10,10,10,0.04)] overflow-hidden">
+                    {img ? (
+                      <Image src={img.url} alt={img.alt ?? p.title} fill className="object-cover group-hover:scale-[1.03] transition-transform duration-300" sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw" />
+                    ) : (
+                      <div className="w-full h-full grid place-items-center text-ink/40">No image</div>
+                    )}
+                  </div>
+                  <div className="p-3">
+                    <h3 className="text-sm md:text-base font-medium line-clamp-1">{p.title}</h3>
+                    <p className="text-ink/70 text-sm">{formatPrice(p.price, p.currency)}</p>
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* Brand story */}
+      <section className="container py-12 md:py-16">
+        <div className="grid md:grid-cols-2 gap-8 items-center">
+          <div className="order-2 md:order-1">
+            <h2 className="text-3xl font-serif mb-3">Timeless craft, modern silhouette</h2>
+            <p className="text-ink/70 leading-relaxed">
+              Each AVNERA piece is conceived in our studio and finished by hand with meticulous attention
+              to detail. We balance heritage techniques with contemporary design to create effortless
+              luxury for every day and the extraordinary.
+            </p>
+            <div className="mt-5 flex gap-3">
+              <Link href="/about" className="btn-outline">Our Story</Link>
+              <Link href="/contact" className="btn-gold">Contact</Link>
+            </div>
+          </div>
+          <div className="order-1 md:order-2 rounded-2xl border border-ink/10 bg-white aspect-[16/10] md:aspect-[4/3] overflow-hidden shadow-luxury">
+            <div className="w-full h-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(198,169,105,0.25),transparent_60%)]" />
+          </div>
+        </div>
+      </section>
+
+      {/* Trust badges */}
+      <section className="bg-white/60 border-t border-b border-ink/10">
+        <div className="container py-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center text-sm">
+          <div>
+            <div className="font-medium">Free Shipping</div>
+            <div className="text-ink/60">On orders over ₹2,999</div>
+          </div>
+          <div>
+            <div className="font-medium">Easy Returns</div>
+            <div className="text-ink/60">14-day hassle-free</div>
+          </div>
+          <div>
+            <div className="font-medium">Secure Checkout</div>
+            <div className="text-ink/60">256-bit encryption</div>
+          </div>
+          <div>
+            <div className="font-medium">Handcrafted</div>
+            <div className="text-ink/60">Made with care</div>
+          </div>
+        </div>
+      </section>
+
+      {/* Newsletter */}
+      <section className="container py-12 md:py-16">
+        <div className="rounded-2xl border border-ink/10 bg-white p-6 md:p-10 text-center">
+          <h3 className="text-2xl font-serif mb-2">Join the AVNERA circle</h3>
+          <p className="text-ink/70 mb-5">Be first to know about new drops, private events, and editor picks.</p>
+          <form className="mx-auto flex flex-col sm:flex-row gap-3 max-w-xl">
+            <input
+              type="email"
+              placeholder="you@example.com"
+              className="flex-1 border border-ink/15 rounded-xl px-4 py-3 bg-white/80 focus:outline-none focus:ring-2 focus:ring-[rgba(198,169,105,0.35)]"
+              aria-label="Email address"
+            />
+            <button type="button" className="btn-gold">Subscribe</button>
+          </form>
+          <p className="text-ink/50 text-xs mt-3">By subscribing, you agree to receive emails from AVNERA. Unsubscribe anytime.</p>
+        </div>
+      </section>
+    </main>
+  )
 }
