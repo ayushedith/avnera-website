@@ -2,6 +2,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import HeroCarousel from '../components/HeroCarousel'
 import PromoCard from '../components/PromoCard'
+import SectionBanner from '../components/SectionBanner'
+import Reveal from '../components/Reveal'
 import { prisma } from '../lib/prisma'
 
 function formatPrice(paise: number | bigint, currency = 'INR') {
@@ -33,10 +35,13 @@ export default async function Home() {
     console.error('Database not initialized yet or unavailable. Rendering with empty state.', err)
   }
 
+  const isLoading = false // server already awaited; placeholder kept for future streaming
+
   return (
     <main className="min-h-screen flex flex-col items-stretch text-ink overflow-hidden">
       {/* Hero */}
-      <HeroCarousel
+  <Reveal>
+  <HeroCarousel
         slides={[
           {
             title: 'Indo Western',
@@ -65,12 +70,14 @@ export default async function Home() {
             },
           },
         ]}
-      />
+  />
+  </Reveal>
 
       {/* Promo Cards */}
       <section className="container py-10 md:py-14">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          <PromoCard
+          <Reveal>
+            <PromoCard
             title="Festive Fabulous"
             subtitle="Vibrant sets that shine for every celebration"
             href="/collections/festive"
@@ -78,8 +85,10 @@ export default async function Home() {
               url: 'https://images.unsplash.com/photo-1531512073830-ba890ca4eba2?q=80&w=1200&auto=format&fit=crop',
               alt: 'Festive outfits',
             }}
-          />
-          <PromoCard
+            />
+          </Reveal>
+          <Reveal delay={120}>
+            <PromoCard
             title="Best Sellers"
             subtitle="Loved by the community — back in stock"
             href="/collections/best-sellers"
@@ -87,20 +96,45 @@ export default async function Home() {
               url: 'https://images.unsplash.com/photo-1604134967494-8a9ed3adea0d?q=80&w=1200&auto=format&fit=crop',
               alt: 'Best sellers',
             }}
-          />
+            />
+          </Reveal>
         </div>
       </section>
 
+      {/* Best Seller banner */}
+      <Reveal>
+        <SectionBanner
+        className="my-6"
+        title="BEST SELLER"
+        subtitle="Best-selling styles tailored for your vibe"
+        />
+      </Reveal>
+
       {/* Featured Collections */}
-      {collections.length > 0 && (
-        <section className="container py-12 md:py-16">
-          <div className="flex items-end justify-between mb-6">
-            <h2 className="text-2xl md:text-3xl font-serif">Featured Collections</h2>
-            <Link href="/collections" className="text-ink/60 hover:text-ink">View all</Link>
-          </div>
+      <section className="container py-12 md:py-16">
+        <div className="flex items-end justify-between mb-6">
+          <h2 className="text-2xl md:text-3xl font-serif">Featured Collections</h2>
+          <Link href="/collections" className="text-ink/60 hover:text-ink">View all</Link>
+        </div>
+        {collections.length === 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {collections.map((c) => (
-              <Link key={c.id} href={`/collections/${c.slug}`} className="group rounded-xl overflow-hidden border border-ink/10 bg-white shadow-luxury">
+            {[...Array(3)].map((_, i) => (
+              <Reveal key={i}>
+              <div className="rounded-xl border border-ink/10 bg-white overflow-hidden">
+                <div className="skeleton shimmer aspect-[16/10]" />
+                <div className="p-4">
+                  <div className="skeleton h-5 w-40 rounded" />
+                  <div className="skeleton h-3 w-56 rounded mt-2" />
+                </div>
+              </div>
+              </Reveal>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {collections.map((c, idx) => (
+              <Reveal key={c.id} delay={idx * 60}>
+              <Link href={`/collections/${c.slug}`} className="group rounded-xl overflow-hidden border border-ink/10 bg-white shadow-luxury">
                 <div className="relative aspect-[16/10] bg-[rgba(10,10,10,0.04)] overflow-hidden">
                   {c.heroImage ? (
                     <Image src={c.heroImage} alt={c.title} fill className="object-cover group-hover:scale-[1.02] transition-transform duration-300" sizes="(max-width: 768px) 100vw, 33vw" />
@@ -113,23 +147,39 @@ export default async function Home() {
                   {c.description && <p className="text-sm text-ink/60 mt-1 line-clamp-2">{c.description}</p>}
                 </div>
               </Link>
+              </Reveal>
             ))}
           </div>
-        </section>
-      )}
+        )}
+      </section>
 
       {/* New Arrivals */}
-      {products.length > 0 && (
-        <section className="container py-12 md:py-16">
+      <section className="container py-12 md:py-16">
           <div className="flex items-end justify-between mb-6">
             <h2 className="text-2xl md:text-3xl font-serif">New Arrivals</h2>
             <Link href="/shop" className="text-ink/60 hover:text-ink">Shop all</Link>
           </div>
+        {products.length === 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {products.map((p) => {
+            {[...Array(8)].map((_, i) => (
+              <Reveal key={i}>
+              <div className="rounded-xl overflow-hidden border border-ink/10 bg-white">
+                <div className="skeleton shimmer aspect-[4/5]" />
+                <div className="p-3 space-y-2">
+                  <div className="skeleton h-4 w-40 rounded" />
+                  <div className="skeleton h-3 w-24 rounded" />
+                </div>
+              </div>
+              </Reveal>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+            {products.map((p, idx) => {
               const img = p.images?.[0]
               return (
-                <Link key={p.id} href={`/shop/${p.slug}`} className="group rounded-xl overflow-hidden border border-ink/10 bg-white">
+                <Reveal key={p.id} delay={idx * 60}>
+                <Link href={`/shop/${p.slug}`} className="group rounded-xl overflow-hidden border border-ink/10 bg-white">
                   <div className="relative aspect-[4/5] bg-[rgba(10,10,10,0.04)] overflow-hidden">
                     {img ? (
                       <Image src={img.url} alt={img.alt ?? p.title} fill className="object-cover group-hover:scale-[1.03] transition-transform duration-300" sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw" />
@@ -142,11 +192,12 @@ export default async function Home() {
                     <p className="text-ink/70 text-sm">{formatPrice(p.price, p.currency)}</p>
                   </div>
                 </Link>
+                </Reveal>
               )
             })}
           </div>
-        </section>
-      )}
+        )}
+      </section>
 
       {/* Brand story */}
       <section className="container py-12 md:py-16">

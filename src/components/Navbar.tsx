@@ -27,7 +27,7 @@ export default function Navbar() {
 
         <div className="flex items-center gap-3">
           <button onClick={open} className="relative border border-black/10 rounded-md px-3 py-1" aria-label="Open cart">
-            Bag
+            Cart
             {count > 0 && (
               <span className="absolute -top-2 -right-2 bg-gold text-black text-xs rounded-full px-1.5 py-0.5">{count}</span>
             )}

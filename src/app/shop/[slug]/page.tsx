@@ -35,7 +35,7 @@ export default async function ProductPage({ params }: Props) {
   <div className="mt-2 text-xl">{(Number(product.price)/100).toLocaleString('en-IN', { style: 'currency', currency: product.currency })}</div>
   <p className="mt-4 text-slate-700 whitespace-pre-line">{product.description}</p>
         <div className="mt-6 flex gap-3">
-          {/* Client island for Add to Bag */}
+          {/* Client island for Add to Cart */}
           <AddToCart id={product.id} slug={product.slug} title={product.title} price={Number(product.price)} currency={product.currency} image={product.images[0]?.url} />
           <button className="btn-outline">Book an Appointment</button>
         </div>
