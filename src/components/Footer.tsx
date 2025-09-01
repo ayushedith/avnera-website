@@ -1,5 +1,6 @@
 "use client"
 
+import React from 'react'
 import Link from 'next/link'
 
 function Icon({ name, className }: { name: 'map'|'phone'|'mail'|'clock'|'facebook'|'instagram'|'arrowUp'; className?: string }) {
@@ -59,8 +60,8 @@ export default function Footer() {
   const year = new Date().getFullYear()
   return (
     <footer className="mt-16 border-t border-black/10 bg-rose-50/80 relative text-ink">
-      {/* Top grid */}
-      <div className="container py-12 grid gap-10 md:grid-cols-5 text-sm">
+  {/* Top grid (desktop) */}
+  <div className="container py-12 hidden md:grid gap-10 md:grid-cols-5 text-sm">
         {/* Brand + contact */}
         <div className="space-y-4">
           <div>
@@ -86,7 +87,7 @@ export default function Footer() {
 
         {/* Our Shop */}
         <div>
-          <div className="font-medium mb-3 tracking-wide">OUR SHOP</div>
+          <div className="font-medium mb-3 tracking-wide font-nav">OUR SHOP</div>
           <ul className="space-y-2 text-ink/80">
             <li><Link href="/collection">New Arrivals</Link></li>
             <li><Link href="/collection">Collections</Link></li>
@@ -97,7 +98,7 @@ export default function Footer() {
 
         {/* About Us */}
         <div>
-          <div className="font-medium mb-3 tracking-wide">ABOUT US</div>
+          <div className="font-medium mb-3 tracking-wide font-nav">ABOUT US</div>
           <ul className="space-y-2 text-ink/80">
             <li><Link href="/about">About Store</Link></li>
             <li><Link href="/contact">Store Location</Link></li>
@@ -108,7 +109,7 @@ export default function Footer() {
 
         {/* Information */}
         <div>
-          <div className="font-medium mb-3 tracking-wide">INFORMATION</div>
+          <div className="font-medium mb-3 tracking-wide font-nav">INFORMATION</div>
           <ul className="space-y-2 text-ink/80">
             <li><a href="#">Privacy Policy</a></li>
             <li><a href="#">Terms &amp; Conditions</a></li>
@@ -119,7 +120,7 @@ export default function Footer() {
 
         {/* Discover */}
         <div>
-          <div className="font-medium mb-3 tracking-wide">DISCOVER</div>
+          <div className="font-medium mb-3 tracking-wide font-nav">DISCOVER</div>
           <ul className="space-y-2 text-ink/80">
             <li><a href="#">Collaborate With Us</a></li>
             <li><a href="#">Exchange Request</a></li>
@@ -129,13 +130,52 @@ export default function Footer() {
         </div>
       </div>
 
+      {/* Mobile accordion */}
+      <div className="container md:hidden text-sm">
+        {/* Collapsible lists */}
+  <Accordion title="OUR SHOP">
+          <ul className="space-y-2 text-ink/80 py-3">
+            <li><Link href="/collection">New Arrivals</Link></li>
+            <li><Link href="/collection">Collections</Link></li>
+            <li><Link href="/highlights">Highlights</Link></li>
+            <li><Link href="/collection">Sale</Link></li>
+          </ul>
+        </Accordion>
+  <Accordion title="ABOUT US">
+          <ul className="space-y-2 text-ink/80 py-3">
+            <li><Link href="/about">About Store</Link></li>
+            <li><Link href="/contact">Store Location</Link></li>
+            <li><Link href="/contact">Contact Us</Link></li>
+            <li><a href="#">FAQ</a></li>
+          </ul>
+        </Accordion>
+  <Accordion title="INFORMATION">
+          <ul className="space-y-2 text-ink/80 py-3">
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms &amp; Conditions</a></li>
+            <li><a href="#">Shipping Policy</a></li>
+            <li><a href="#">Exchange &amp; Cancellation</a></li>
+          </ul>
+        </Accordion>
+  <Accordion title="DISCOVER" last>
+          <ul className="space-y-2 text-ink/80 py-3">
+            <li><a href="#">Collaborate With Us</a></li>
+            <li><a href="#">Exchange Request</a></li>
+            <li><a href="#">Order Tracking</a></li>
+            <li><Link href="/auth/login">Your Account</Link></li>
+          </ul>
+        </Accordion>
+      </div>
+
       {/* Bottom bar */}
-      <div className="border-t border-black/10 py-4 text-xs text-ink/70 relative">
+      <div className="border-t border-black/10 py-5 text-xs text-ink/70 relative">
         <div className="container flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <span>Copyright {year} © AVNERA. All rights reserved.</span>
-          <div className="flex items-center gap-2">
-            {['AMEX','MASTERCARD','VISA','PAYPAL','DINERS'].map((p)=> (
-              <span key={p} className="px-2.5 py-1 rounded bg-white text-ink/80 border border-black/10 tracking-tight">{p}</span>
+          <span>Copyright {year} © AVNERA. All Rights Reserved.</span>
+          <div className="flex items-center gap-3">
+            {['American Express','Mastercard','VISA','PayPal','Diners'].map((p)=> (
+              <span key={p} className="h-7 min-w-[56px] px-2.5 inline-flex items-center justify-center rounded-md bg-white border border-black/10 shadow-sm text-[10px] font-medium text-ink/70">
+                {p}
+              </span>
             ))}
           </div>
         </div>
@@ -150,5 +190,24 @@ export default function Footer() {
         </button>
       </div>
     </footer>
+  )
+}
+
+function Accordion({ title, children, last }: { title: string; children: React.ReactNode; last?: boolean }) {
+  const [open, setOpen] = React.useState(false)
+  return (
+    <div className={"" + (!last ? " border-b border-black/10" : "") + " "}>
+      <button
+        className="w-full flex items-center justify-between py-4 border-t border-black/10"
+        onClick={() => setOpen(o => !o)}
+        aria-expanded={open}
+      >
+        <span className="tracking-wide font-medium">{title}</span>
+        <span className="text-xl leading-none select-none">{open ? '−' : '+'}</span>
+      </button>
+      <div className={open ? 'block' : 'hidden'}>
+        {children}
+      </div>
+    </div>
   )
 }
