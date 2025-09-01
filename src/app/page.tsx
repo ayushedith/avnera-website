@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import HeroCarousel from '../components/HeroCarousel'
+import PromoCard from '../components/PromoCard'
 import { prisma } from '../lib/prisma'
 
 function formatPrice(paise: number | bigint, currency = 'INR') {
@@ -34,16 +36,58 @@ export default async function Home() {
   return (
     <main className="min-h-screen flex flex-col items-stretch text-ink overflow-hidden">
       {/* Hero */}
-      <section className="relative flex flex-col items-center justify-center text-center px-6 py-24 md:py-32 gap-6">
-        <div className="absolute inset-0 bg-[radial-gradient(60%_60%_at_50%_0%,rgba(198,169,105,0.15),transparent_60%)]" />
-        <h1 className="relative text-6xl md:text-8xl font-serif tracking-wider">AVNERA</h1>
-        <p className="relative text-xl md:text-2xl text-ink/70">Craft Meets Couture</p>
-        <div className="relative flex gap-4 mt-4">
-          <Link href="/shop" className="btn-gold">Shop</Link>
-          <Link href="/collections" className="btn-outline">Explore Collections</Link>
-        </div>
-        <div className="relative mt-2">
-          <Link href="/admin/products" className="text-sm text-ink/50 hover:text-ink/80">Admin</Link>
+      <HeroCarousel
+        slides={[
+          {
+            title: 'Indo Western',
+            subtitle: 'Curated silhouettes to elevate your wardrobe',
+            badge: 'SPECIAL PRICE',
+            cta: { label: 'Shop Now', href: '/collections/indo-western' },
+            leftImage: {
+              url: 'https://images.unsplash.com/photo-1552332386-f8dd00dc2f85?q=80&w=1200&auto=format&fit=crop',
+              alt: 'Indo Western left',
+            },
+            rightImage: {
+              url: 'https://images.unsplash.com/photo-1592878904946-b3cd00e68e91?q=80&w=1200&auto=format&fit=crop',
+              alt: 'Indo Western right',
+            },
+          },
+          {
+            title: 'Luxe Collection',
+            subtitle: 'Hand-beaded couture crafted in limited runs',
+            badge: 'NEW ARRIVALS',
+            cta: { label: 'Explore', href: '/collections/luxe-collection' },
+            leftImage: {
+              url: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200&auto=format&fit=crop',
+            },
+            rightImage: {
+              url: 'https://images.unsplash.com/photo-1543087903-1ac2ec7aa8c5?q=80&w=1200&auto=format&fit=crop',
+            },
+          },
+        ]}
+      />
+
+      {/* Promo Cards */}
+      <section className="container py-10 md:py-14">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <PromoCard
+            title="Festive Fabulous"
+            subtitle="Vibrant sets that shine for every celebration"
+            href="/collections/festive"
+            image={{
+              url: 'https://images.unsplash.com/photo-1531512073830-ba890ca4eba2?q=80&w=1200&auto=format&fit=crop',
+              alt: 'Festive outfits',
+            }}
+          />
+          <PromoCard
+            title="Best Sellers"
+            subtitle="Loved by the community — back in stock"
+            href="/collections/best-sellers"
+            image={{
+              url: 'https://images.unsplash.com/photo-1604134967494-8a9ed3adea0d?q=80&w=1200&auto=format&fit=crop',
+              alt: 'Best sellers',
+            }}
+          />
         </div>
       </section>
 
