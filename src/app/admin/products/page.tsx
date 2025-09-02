@@ -34,7 +34,10 @@ export default async function AdminProductsPage() {
   <div className="p-6">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-semibold">Products</h1>
-        <Link href="/admin/products/new" className="bg-gold text-black px-4 py-2 rounded-md">New Product</Link>
+        <div className="flex items-center gap-3">
+          <Link href="/admin/users" className="text-sm underline">Users</Link>
+          <Link href="/admin/products/new" className="bg-gold text-black px-4 py-2 rounded-md">New Product</Link>
+        </div>
       </div>
       {hadDbError && (
         <div className="mb-4 rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-amber-800">

@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@prisma/client": "^6.15.0",
+    "bcryptjs": "^3.0.2",
     "next": "^14.2.32",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
@@ -21,13 +22,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-  "postinstall": "prisma generate",
-  "prisma:generate": "prisma generate",
-  "prisma:migrate": "prisma migrate dev",
-  "prisma:deploy": "prisma migrate deploy",
-  "seed:db": "node scripts/seed.mjs"
-  }
-  ,
+    "postinstall": "prisma generate",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:deploy": "prisma migrate deploy",
+    "seed:db": "node scripts/seed.mjs"
+  },
   "prisma": {
     "seed": "node scripts/seed.mjs"
   }

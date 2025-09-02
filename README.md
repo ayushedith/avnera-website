@@ -26,5 +26,10 @@
 5. Start the app and confirm pages load with remote DB.
 
 ### Notes
-- Current models use `BigInt` for `Product.price` and `Variant.additionalPrice`.
-- For prod CI/CD, run `prisma migrate deploy` before `next start`.
+
+
+### Auth
+
+- Set `ADMIN_PASSWORD` to enable admin login at `/admin/login`.
+- Optionally set `AUTH_SECRET` to sign user sessions; otherwise `ADMIN_PASSWORD` is used.
+- User flows available at `/auth/signup` and `/auth/login`. Admin pages require role ADMIN or the admin cookie.
