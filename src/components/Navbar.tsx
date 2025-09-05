@@ -11,8 +11,7 @@ export default function Navbar() {
   const categories = [
     { href: '/collection', label: 'New Arrivals' },
     { href: '/highlights', label: 'Best Sellers' },
-    { href: '/collection', label: 'Swimwear' },
-    { href: '/collection', label: 'Luxe Collection' },
+  // 'Swimwear' and 'Luxe Collection' removed per request
     { href: '/collection', label: 'Indian Wear' },
     { href: '/collection', label: 'Indo Western' },
     { href: '/collection', label: 'Summer Vibes' },
@@ -27,13 +26,13 @@ export default function Navbar() {
         <button aria-label="Search" className="justify-self-start text-ink/80 hover:text-ink">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.2-3.2"/></svg>
         </button>
+        
 
         {/* Left categories */}
   <nav className="min-w-0 overflow-x-auto no-scrollbar flex items-center justify-end gap-5 font-nav text-[12px] lg:text-[13px] tracking-wide whitespace-nowrap">
+          
           <NavItem href="/collection" label="NEW" />
           <NavItem href="/highlights" label="BEST SELLERS" muted />
-          <NavItem href="/collection" label="SWIMWEAR" />
-          <NavItem href="/collection" label="LUXE COLLECTION" />
         </nav>
 
         {/* Center logo */}

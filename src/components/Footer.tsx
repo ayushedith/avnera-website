@@ -68,13 +68,7 @@ export default function Footer() {
             <div className="font-serif text-2xl tracking-wide">AVNERA</div>
             <p className="text-ink/70 mt-2 max-w-xs">Craft Meets Couture. Heritage handcrafted in India.</p>
           </div>
-          <ul className="space-y-3 text-ink/80">
-            <li className="flex items-start gap-3"><Icon name="map"/><span>F-121, Rajouri Garden, New Delhi 110027</span></li>
-            <li className="flex items-center gap-3"><Icon name="phone"/><span>Toll Free: +91-8882404526</span></li>
-            <li className="flex items-center gap-3"><Icon name="mail"/><span>support@avnera.com</span></li>
-            <li className="flex items-center gap-3"><Icon name="clock"/><span>11 AM – 9 PM (Open All Days)</span></li>
-          </ul>
-
+          {/* contact info removed as requested (address/phone/email/open time) */}
           <div className="flex items-center gap-3 pt-2">
             <a aria-label="Facebook" href="#" className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/70 text-ink hover:bg-white transition">
               <Icon name="facebook" className="w-4 h-4"/>
