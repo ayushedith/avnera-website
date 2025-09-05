@@ -9,13 +9,13 @@ export default function Navbar() {
   const [cartPulse, setCartPulse] = useState(false)
   const count = items.reduce((n, i) => n + i.qty, 0)
   const categories = [
-    { href: '/collection', label: 'New Arrivals' },
+    { href: '/collections', label: 'New Arrivals' },
     { href: '/highlights', label: 'Best Sellers' },
-  // 'Swimwear' and 'Luxe Collection' removed per request
-    { href: '/collection', label: 'Indian Wear' },
-    { href: '/collection', label: 'Indo Western' },
-    { href: '/collection', label: 'Summer Vibes' },
-    { href: '/collection', label: 'Winter Wear' },
+    // 'Swimwear' and 'Luxe Collection' removed per request
+    { href: '/collections/indian-wear', label: 'Indian Wear' },
+    { href: '/collections/indo-western', label: 'Indo Western' },
+    { href: '/collections/summer-vibes', label: 'Summer Vibes' },
+    { href: '/collections/winter-wear', label: 'Winter Wear' },
   ]
 
   return (
@@ -31,7 +31,7 @@ export default function Navbar() {
         {/* Left categories */}
   <nav className="min-w-0 overflow-x-auto no-scrollbar flex items-center justify-end gap-5 font-nav text-[12px] lg:text-[13px] tracking-wide whitespace-nowrap">
           
-          <NavItem href="/collection" label="NEW" />
+          <NavItem href="/collections" label="NEW" />
           <NavItem href="/highlights" label="BEST SELLERS" muted />
         </nav>
 
@@ -42,10 +42,10 @@ export default function Navbar() {
 
         {/* Right categories */}
   <nav className="min-w-0 overflow-x-auto no-scrollbar flex items-center justify-start gap-5 font-nav text-[12px] lg:text-[13px] tracking-wide whitespace-nowrap">
-          <NavItem href="/collection" label="INDIAN WEAR" />
-          <NavItem href="/collection" label="INDO WESTERN" />
-          <NavItem href="/collection" label="SUMMER VIBES" />
-          <NavItem href="/collection" label="WINTER WEAR" />
+          <NavItem href="/collections/indian-wear" label="INDIAN WEAR" />
+          <NavItem href="/collections/indo-western" label="INDO WESTERN" />
+          <NavItem href="/collections/summer-vibes" label="SUMMER VIBES" />
+          <NavItem href="/collections/winter-wear" label="WINTER WEAR" />
         </nav>
 
         {/* Right icons */}
